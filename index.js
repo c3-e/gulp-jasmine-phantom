@@ -94,7 +94,7 @@ function execPhantom(phantom, childArguments, onComplete) {
 
 /**
   * Executes Phantom with the specified arguments
-  * 
+  *
   * childArguments: Array of options to pass Phantom
   * [jasmine-runner.js, specRunner.html]
   **/
@@ -252,9 +252,11 @@ module.exports = function (options) {
       gutil.log('Running Jasmine in Node');
       try {
         var jasmine = new Jasmine(),
-            terminalReporter = require('./lib/terminal-reporter.js').TerminalReporter;
+            SpecReporter = require('jasmine-spec-reporter');
 
-        jasmine.addReporter(new terminalReporter(_.defaults(gulpOptions, {showColors: true})));
+        jasmine.addReporter(new SpecReporter(_.defaults(gulpOptions, {
+          displayStacktrace: summary
+        })));
 
         jasmine.loadConfig({
           random: _.get(gulpOptions, 'random', false),
