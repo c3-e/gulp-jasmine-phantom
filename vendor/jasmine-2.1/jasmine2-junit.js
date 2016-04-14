@@ -25,6 +25,7 @@
             var currentSuite;
             var totalNumberOfSpecs;
             var totalNumberOfFailures;
+            var rootPath = (options && options.xmlResultPath) || '.';
 
             this.jasmineStarted = function(started) {
                 totalNumberOfSpecs = started.totalSpecsDefined;
@@ -53,7 +54,7 @@
             this.suiteDone = function(result) {
                 if (suiteLevel == 0) {
                     currentSuite.endTime = new Date();
-                    writeFile('.', descToFilename(result.description), suiteToJUnitXml(currentSuite))
+                    writeFile(rootPath, descToFilename(result.description), suiteToJUnitXml(currentSuite))
                 }
                 suiteLevel--;
             };
