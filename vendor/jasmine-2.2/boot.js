@@ -76,7 +76,7 @@
   env.addReporter(jasmineInterface.jsApiReporter);
   var JUnitXmlReporter = jasmineRequire.JUnitXmlReporter();
   env.addReporter(new JUnitXmlReporter({
-    xmlResultPath: 'TestResults/'
+    xmlResultPath: window.JUnitreportPath
   }));
   env.addReporter(htmlReporter);
 
