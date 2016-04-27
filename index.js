@@ -155,6 +155,8 @@ function compileRunner(options, execOptions) {
     vendorJs = Object.keys(vendorFiles);
 
     // Create the compile version of the specRunner from Handlebars
+    var reportPath = typeof(gulpOptions.reportPath) === 'string' ? gulpOptions.reportPath : 'TestResults';
+
     var specData = handlebar.compile(data),
         specCompiled = specData({
           files: filePaths,
@@ -162,7 +164,7 @@ function compileRunner(options, execOptions) {
           jasmineJs: jasmineJs,
           vendorJs: vendorJs,
           specRunner: specRunner,
-          JUnitreportPath: gulpOptions.reportPath ? gulpOptions.reportPath : 'TestResults'
+          JUnitreportPath: reportPath
         });
 
     if(gulpOptions.keepRunner !== undefined && typeof gulpOptions.keepRunner === 'string') {
