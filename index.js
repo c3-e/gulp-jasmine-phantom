@@ -161,7 +161,8 @@ function compileRunner(options, execOptions) {
           jasmineCss: jasmineCss,
           jasmineJs: jasmineJs,
           vendorJs: vendorJs,
-          specRunner: specRunner
+          specRunner: specRunner,
+          JUnitreportPath: gulpOptions.reportPath ? gulpOptions.reportPath : 'TestResults'
         });
 
     if(gulpOptions.keepRunner !== undefined && typeof gulpOptions.keepRunner === 'string') {
