@@ -27,6 +27,11 @@ var phantomExecutable = process.platform === 'win32' ? 'phantomjs.cmd' : 'phanto
     specHtml = path.join(__dirname, '/lib/specRunner.html'),
     specRunner = path.join(__dirname, '/lib/specRunner.js');
 
+function configPhantom(phantomCommand) {
+  if (phantomCommand) {
+    phantomExecutable = phantomCommand;
+  }
+}
 
 function configJasmine(version) {
   version = version || '2.0';
@@ -56,7 +61,7 @@ function hasGlobalPhantom() {
     }
   } else {
     try {
-      exec('which phantomjs');
+      exec('which ' + phantomExecutable);
     } catch (e) {
       return false;
     }
@@ -197,6 +202,7 @@ module.exports = function (options, execOptions) {
   gulpOptions = options || {};
   execOptions = execOptions || {};
   configJasmine(gulpOptions.jasmineVersion);
+  configPhantom(execOptions.phantomCommand);
 
   if(!!gulpOptions.integration) {
     return through.obj(
