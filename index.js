@@ -78,7 +78,7 @@ function execPhantom(phantom, childArguments, onComplete, execOptions) {
 
     if(error !== null) {
       console.log('Need to debug here');
-      success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
+      // success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
     }
 
     if (stderr !== '') {
