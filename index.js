@@ -78,12 +78,13 @@ function execPhantom(phantom, childArguments, onComplete, execOptions) {
 
     if(error !== null) {
       console.log('Need to debug here');
-      // success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
+      success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
     }
 
     if (stderr !== '') {
       gutil.log('gulp-jasmine-phantom: Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
       gutil.log(gutil.colors.red('error: '), stderr);
+      console.log('error: ', stderr);
       success = new gutil.PluginError('gulp-jasmine-phantomjs', 'Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
     }
 
