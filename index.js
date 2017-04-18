@@ -2,6 +2,7 @@
 var _ = require('lodash'),
     exec = require('child_process').execSync,
     execFile = require('child_process').execFile,
+    spawn = require('child_process').spawn,
     fs = require('fs'),
     glob = require('glob'),
     gutil = require('gulp-util'),
@@ -78,28 +79,38 @@ function hasGlobalPhantom() {
  * @param {object} execOptions options to run Phantom
  */
 function execPhantom(phantom, childArguments, onComplete, execOptions) {
-  execFile(phantom, childArguments, execOptions, function(error, stdout, stderr) {
-    var success = null;
+    var phantomSpawn = spawn(phantom, childArguments, execOptions);
 
-    if(error !== null) {
-      console.log('Need to debug here');
-      // success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
-    }
+    phantomSpawn.stdout.on('data', (data) => {
+        console.log(`${data}`);
+    });
 
-    if (stderr !== '') {
-      gutil.log('gulp-jasmine-phantom: Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
-      gutil.log(gutil.colors.red('error: '), stderr);
-      console.log('error: ', stderr);
-      success = new gutil.PluginError('gulp-jasmine-phantomjs', 'Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
-    }
+    phantomSpawn.stderr.on('data',  (data) => {
+        console.log(`${data}`);
+    });
 
-    if(gulpOptions.specHtml === undefined && (gulpOptions.keepRunner === undefined || gulpOptions.keepRunner === false)) {
-      cleanup(childArguments[1]);
-    }
+    phantomSpawn.on('close', function(error, stdout, stderr) {
+      var success = null;
 
-    console.log(stdout);
-    onComplete(success);
-  });
+      if(error !== 0) {
+        console.log('Error:');
+        console.log(error);
+        // success = new gutil.PluginError('gulp-jasmine-phantomjs', error.code + ': Tests contained failures. Check logs for details.');
+      }
+
+      if (stderr) {
+        gutil.log('gulp-jasmine-phantom: Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
+        gutil.log(gutil.colors.red('error: '), stderr);
+        console.log('error: ', stderr);
+        success = new gutil.PluginError('gulp-jasmine-phantomjs', 'Failed to open test runner ' + gutil.colors.blue(childArguments[1]));
+      }
+
+      if(gulpOptions.specHtml === undefined && (gulpOptions.keepRunner === undefined || gulpOptions.keepRunner === false)) {
+        cleanup(childArguments[1]);
+      }
+
+      onComplete(success);
+    });
 }
 
 /**
