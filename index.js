@@ -135,10 +135,12 @@ function runPhantom(childArguments, onComplete, execOptions) {
  *  files: paths to files being tested
  *  onComplete: callback to call when everything is done
  **/
-function compileRunner(options, execOptions) {
+function compileRunner(options, execOptions, phantomArguments) {
   var filePaths = options.files || [],
       onComplete = options.onComplete || {},
       vendorFiles = {};
+
+  phantomArguments = phantomArguments || [];
   fs.readFile(path.join(__dirname, '/lib/specRunner.handlebars'), 'utf8', function(error, data) {
     if (error) {
       throw error;
@@ -194,11 +196,11 @@ function compileRunner(options, execOptions) {
       }
 
       if(gulpOptions.integration) {
-        var childArgs = [
+        var childArgs = phantomArguments.concat([
           path.join(__dirname, '/lib/jasmine-runner.js'),
           specHtml,
           JSON.stringify(gulpOptions)
-        ];
+        ]);
         runPhantom(childArgs, onComplete, execOptions);
       } else {
         onComplete(null);
@@ -207,11 +209,12 @@ function compileRunner(options, execOptions) {
   });
 }
 
-module.exports = function (options, execOptions) {
+module.exports = function (options, execOptions, phantomArguments) {
   var filePaths = [];
 
   gulpOptions = options || {};
   execOptions = execOptions || {};
+  phantomArguments = phantomArguments || [];
   configJasmine(gulpOptions.jasmineVersion);
   configPhantom(execOptions.phantomCommand);
 
@@ -233,11 +236,11 @@ module.exports = function (options, execOptions) {
         try {
           if(gulpOptions.specHtml) {
             runPhantom(
-              [
+              phantomArguments.concat([
                 path.join(__dirname, '/lib/jasmine-runner.js'),
                 path.resolve(gulpOptions.specHtml),
                 JSON.stringify(gulpOptions)
-              ], function(success) {
+              ]), function(success) {
               callback(success);
             }, execOptions);
           } else {
