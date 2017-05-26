@@ -249,7 +249,7 @@ module.exports = function (options, execOptions, phantomArguments) {
               onComplete: function(success) {
                 callback(success);
               }
-            }, execOptions);
+          }, execOptions, phantomArguments);
           }
         } catch(error) {
           callback(new gutil.PluginError('gulp-jasmine-phantom', error));
