@@ -95,14 +95,14 @@
         resultXml += '<testsuites>\n';
         resultXml += '\t<testsuite tests="' + suite.noOfSpecs + '" errors="0" failures="' + suite.noOfFails + '" time="' + elapsed(suite.startTime, suite.endTime) + '" timestamp="' + ISODateString(suite.startTime) + '">\n'
         for (var i = 0; i < suite.specs.length; i++) {
-            resultXml += specToJUnitXml(suite.specs[i], suite.id);
+            resultXml += specToJUnitXml(suite.specs[i], suite);
         }
         resultXml += '\t</testsuite>\n</testsuites>\n\n'
         return resultXml;
     }
 
-    function specToJUnitXml(spec, suiteId) {
-        var xml = '\t\t<testcase classname="' + suiteId +
+    function specToJUnitXml(spec, suite) {
+        var xml = '\t\t<testcase classname="' + suite.description +
             '" name="' + escapeInvalidXmlChars(spec.description) + '" time="' + elapsed(spec.startTime, spec.endTime) + '">\n';
         if (isSkipped(spec)) {
             xml += '\t\t\t<skipped />\n';
